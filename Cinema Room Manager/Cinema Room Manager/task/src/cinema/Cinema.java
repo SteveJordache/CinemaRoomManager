@@ -1,7 +1,5 @@
 package cinema;
-
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class Cinema {
     static String [][] seating;
@@ -13,6 +11,9 @@ public class Cinema {
     static double occupancyPercentage = 0;
     static int numberOfPurchasedTickets = 0;
     static int totalCapacity = 0;
+    static int potentialIncome;
+    static int rowNumber;
+    static int seatNumber;
 
 
     public static void printTheSeats(int nrOfRows, int nrOfSeats) {
@@ -33,32 +34,56 @@ public class Cinema {
 
 
     public static void buyTicket() {
+                System.out.println();
         System.out.println("Enter a row number:");
-        int rowNumber = scanner.nextInt();
+        rowNumber = scanner.nextInt();
         System.out.println("Enter a seat number in that row:");
-        int seatNumber = scanner.nextInt();
-        if ("S".equals(seating[rowNumber - 1][seatNumber -1])){
-            if (bigRoom && rowNumber > nrOfRows / 2 ) {
-                System.out.println("Ticket price: $8");
-                income +=  8;
+        seatNumber = scanner.nextInt();
+        while (true) {
+            if (rowNumber < 1 || seatNumber < 1 || rowNumber > nrOfRows || seatNumber > nrOfSeats) {
+                System.out.println("Wrong input!");
+                buyTicket();
             } else {
-                System.out.println("Ticket price: $10");
-                income += 10;
+                if ("S".equals(seating[rowNumber - 1][seatNumber -1])){
+                    if (bigRoom && rowNumber > nrOfRows / 2 ) {
+                        System.out.println("Ticket price: $8");
+                        income +=  8;
+                    } else {
+                        System.out.println("Ticket price: $10");
+                        income += 10;
+                    }
+                    seating[rowNumber - 1][seatNumber -1] = "B";
+                    numberOfPurchasedTickets += 1 ;
+                    occupancyPercentage = (double) (numberOfPurchasedTickets * 100) / totalCapacity;
+                    break;
+                } else {
+                    System.out.println("That ticket has already been purchased!");
+                    buyTicket();
+                }
             }
-            seating[rowNumber - 1][seatNumber -1] = "B";
-            numberOfPurchasedTickets += 1 ;
-            occupancyPercentage = (double) (numberOfPurchasedTickets * 100) / totalCapacity;
-        } else {
-            System.out.println("That ticket has already been purchased!");
         }
+
     }
+    public static void statistics() {
+        potentialIncome = 0;
+        System.out.println();
+        System.out.printf("Number of purchased tickets: %d%n",numberOfPurchasedTickets);
+        String tempString = String.format("Percentage: %.2f", occupancyPercentage);
+        System.out.println(tempString + "%");
+        System.out.printf("Current income: $%d%n",income);
+        if (!bigRoom) {
+            potentialIncome = totalCapacity * 10;
+        } else {
+            for (int i = 1; i <= nrOfRows; i++) {
+                if (i <= nrOfRows/2) {
+                    potentialIncome += nrOfSeats * 10;
+                } else {
+                    potentialIncome += nrOfSeats * 8;
+                }
+            }
+        }
 
-
-    public static void statistics(String[][] seating) {
-        System.out.printf("Number of purchased tickets: %d",numberOfPurchasedTickets);
-        System.out.printf("Percentage: %.2f", occupancyPercentage);
-        System.out.printf("Current income: $%d",???);
-        System.out.printf("Total income: $%d", income);
+        System.out.printf("Total income: $%d%n", potentialIncome);
     }
 
 
@@ -69,7 +94,7 @@ public class Cinema {
         System.out.println("Enter the number of seats in each row:");
         nrOfSeats = scanner.nextInt();
         totalCapacity = nrOfRows * nrOfSeats;
-        bigRoom = nrOfRows * nrOfSeats >= 60 ? true : false;
+        bigRoom = totalCapacity >= 60;
         seating = new String[nrOfRows][nrOfSeats];
         for (int i = 0; i < nrOfRows; i++) {
             for (int j = 0; j < nrOfSeats; j++){
@@ -89,7 +114,7 @@ public class Cinema {
                     buyTicket();
                     break;
                 case 3:
-                    statistics(seating);
+                    statistics();
                     break;
                 case 0:
                     break;
