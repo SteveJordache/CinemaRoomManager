@@ -7,6 +7,7 @@ public class Main {
     public static int totalO = 0;
     public static boolean isPossible;
     public static int counter = 0;
+    public static int[] finalArray = new int[2];
 
     public static void checkGame(char[][] gameBoard) {
         char winningParty = 0;
@@ -58,59 +59,50 @@ public class Main {
 
     public static void enterCoordinates() {
         Scanner scanner = new Scanner (System.in);
-        int[] finalArray = new int[2];
-        while (true) {
-            int counter = 0;
-            boolean flag = true;
-            System.out.print ("Enter the coordinates: ");
-            for (int j = 0; j < 2; j++) {
-                if (!flag) {
+      /*  String valA = scanner.next();
+        String  valB = scanner.next();*/
+        String[] values = scanner.nextLine().split(" ");
+        int counterJ = 0;
+        for ( String temp : values) {
+            switch (temp) {
+                case "1":
+                    finalArray[counterJ] = 1;
+                    counterJ++;
                     break;
-                }
-                String inputString = scanner.next();
-                switch (inputString) {
-                    case "1":
-                        finalArray[j] = 1;
-                        counter++;
-                        break;
-                    case "2":
-                        finalArray[j] = 2;
-                        counter++;
-                        break;
-                    case "3":
-                        finalArray[j] = 3;
-                        counter++;
-                        break;
-                    case "4":
-                    case "5":
-                    case "6":
-                    case "7":
-                    case "8":
-                    case "9":
-                    case "0":
-                        System.out.println ("Coordinates should be from 1 to 3!");
-                        flag = false;
-                        break;
-                    default :
-                        System.out.println("You should enter numbers!");
-                        flag = false;
-                        break;
-                }
-            }
-            if (counter == 2) {
-                break;
+                case "2":
+                    finalArray[counterJ] = 2;
+                    counterJ++;
+                    break;
+                case "3":
+                    finalArray[counterJ] = 3;
+                    counterJ++;
+                    break;
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                    System.out.println ("Coordinates should be from 1 to 3!");
+                    enterCoordinates();
+                    break;
+                default :
+                    System.out.println("You should enter numbers!");
+                    enterCoordinates();
+                    break;
             }
         }
-        if (!makeTheMove(finalArray)) {
+        if (counterJ !=2 || !makeTheMove(finalArray)) {
             enterCoordinates();
         }
     }
 
     public static boolean makeTheMove(int[] coordinates) {
-        int coordinate1 = coordinates[0] -1;
-        int coordinate2 = coordinates[1] -1;
-        if (' ' == (gameBoard[coordinate1][coordinate2])) {
-            gameBoard[coordinate1][coordinate2] = 'X';
+        int coordinate2 = coordinates[0] -1;
+        int coordinate1 = coordinates[1] -1;
+        if (' ' == (gameBoard[coordinate2][coordinate1])) {
+            gameBoard[coordinate2][coordinate1] = 'X';
             return true;
         } else {
             System.out.println("This cell is occupied! Choose another one!");
