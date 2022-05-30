@@ -59,44 +59,46 @@ public class Main {
 
     public static void enterCoordinates() {
         Scanner scanner = new Scanner (System.in);
-      /*  String valA = scanner.next();
-        String  valB = scanner.next();*/
-        String[] values = scanner.nextLine().split(" ");
-        int counterJ = 0;
-        for ( String temp : values) {
-            switch (temp) {
-                case "1":
-                    finalArray[counterJ] = 1;
-                    counterJ++;
-                    break;
-                case "2":
-                    finalArray[counterJ] = 2;
-                    counterJ++;
-                    break;
-                case "3":
-                    finalArray[counterJ] = 3;
-                    counterJ++;
-                    break;
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                case "0":
-                    System.out.println ("Coordinates should be from 1 to 3!");
-                    enterCoordinates();
-                    break;
-                default :
-                    System.out.println("You should enter numbers!");
-                    enterCoordinates();
-                    break;
+        boolean loop = true;
+        while (loop) {
+            boolean flag = true;
+            int counterJ = 0;
+            System.out.print("Enter the coordinates: ");
+            String[] tempArray = scanner.nextLine().split(" ");
+            for (int t = 0; t < 2 && flag; t++) {
+                switch (tempArray[t]) {
+                    case "1":
+                        finalArray[t] = 1;
+                        counterJ++;
+                        break;
+                    case "2":
+                        finalArray[t] = 2;
+                        counterJ++;
+                        break;
+                    case "3":
+                        finalArray[t] = 3;
+                        counterJ++;
+                        break;
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "8":
+                    case "9":
+                    case "0":
+                        System.out.println ("Coordinates should be from 1 to 3!");
+                        flag = false;
+                        break;
+                    default :
+                        System.out.println("You should enter numbers!");
+                        flag = false;
+                }
+            }
+            if (counterJ ==2 && makeTheMove(finalArray)) {
+                loop = false;
+            }
             }
         }
-        if (counterJ !=2 || !makeTheMove(finalArray)) {
-            enterCoordinates();
-        }
-    }
 
     public static boolean makeTheMove(int[] coordinates) {
         int coordinate2 = coordinates[0] -1;
