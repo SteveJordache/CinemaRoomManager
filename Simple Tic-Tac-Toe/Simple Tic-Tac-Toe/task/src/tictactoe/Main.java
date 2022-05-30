@@ -101,10 +101,21 @@ public class Main {
                 break;
             }
         }
-        makeTheMove(finalArray);
+        if (!makeTheMove(finalArray)) {
+            enterCoordinates();
+        }
     }
 
-    public static void makeTheMove(int[] coordinates) {
+    public static boolean makeTheMove(int[] coordinates) {
+        int coordinate1 = coordinates[0] -1;
+        int coordinate2 = coordinates[1] -1;
+        if (' ' == (gameBoard[coordinate1][coordinate2])) {
+            gameBoard[coordinate1][coordinate2] = 'X';
+            return true;
+        } else {
+            System.out.println("This cell is occupied! Choose another one!");
+            return false;
+        }
 
     }
     public static void main(String[] args) {
