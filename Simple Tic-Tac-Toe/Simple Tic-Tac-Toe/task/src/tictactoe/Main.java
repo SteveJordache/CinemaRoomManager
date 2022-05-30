@@ -1,5 +1,4 @@
 package tictactoe;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -57,11 +56,55 @@ public class Main {
         System.out.println("---------");
     }
 
-    public static  boolean checkCoordinates(String[] coordinates) {
-        return  true;
+    public static void enterCoordinates() {
+        Scanner scanner = new Scanner (System.in);
+        int[] finalArray = new int[2];
+        while (true) {
+            int counter = 0;
+            boolean flag = true;
+            System.out.print ("Enter the coordinates: ");
+            for (int j = 0; j < 2; j++) {
+                if (!flag) {
+                    break;
+                }
+                String inputString = scanner.next();
+                switch (inputString) {
+                    case "1":
+                        finalArray[j] = 1;
+                        counter++;
+                        break;
+                    case "2":
+                        finalArray[j] = 2;
+                        counter++;
+                        break;
+                    case "3":
+                        finalArray[j] = 3;
+                        counter++;
+                        break;
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "8":
+                    case "9":
+                    case "0":
+                        System.out.println ("Coordinates should be from 1 to 3!");
+                        flag = false;
+                        break;
+                    default :
+                        System.out.println("You should enter numbers!");
+                        flag = false;
+                        break;
+                }
+            }
+            if (counter == 2) {
+                break;
+            }
+        }
+        makeTheMove(finalArray);
     }
 
-    public static void makeTheMove(String[] coordinates) {
+    public static void makeTheMove(int[] coordinates) {
 
     }
     public static void main(String[] args) {
@@ -85,15 +128,8 @@ public class Main {
         }
 
         printBoard();
-        System.out.print("Enter the coordinates: ");
-        String coordinates = scanner.nextLine();
-        String[] coordinatesArray = coordinates.split(" ");
-        System.out.println(Arrays.toString(coordinatesArray));
-        while (true) {
-            if (checkCoordinates(coordinatesArray)) {
-                makeThemove(coordinatesArray);
-            }
-        }
+        enterCoordinates();
+        printBoard();
 
         // checkGame(gameBoard);
     }
