@@ -1,4 +1,5 @@
 package tictactoe;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -43,10 +44,31 @@ public class Main {
 
         }
     }
+
+    public static void printBoard(){
+        System.out.println("---------");
+        for ( int t =0; t <gameBoard.length; t++) {
+            System.out.print("| ");
+            for( int z =0; z <gameBoard[t].length; z++) {
+                System.out.print(gameBoard[t][z] + " ");
+            }
+            System.out.print("|\n");
+        }
+        System.out.println("---------");
+    }
+
+    public static  boolean checkCoordinates(String[] coordinates) {
+        return  true;
+    }
+
+    public static void makeTheMove(String[] coordinates) {
+
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter cells: ");
         String symbolString = scanner.nextLine();
+        symbolString = symbolString.replace("_", " ");
         char[] symbolChar = symbolString.toCharArray();
         int index = 0;
         for (int i = 0; i < gameBoard.length; i++){
@@ -61,15 +83,18 @@ public class Main {
                 index++;
             }
         }
-        System.out.println("---------");
-        for ( int t =0; t <gameBoard.length; t++) {
-            System.out.print("| ");
-            for( int z =0; z <gameBoard[t].length; z++) {
-                System.out.print(gameBoard[t][z] + " ");
+
+        printBoard();
+        System.out.print("Enter the coordinates: ");
+        String coordinates = scanner.nextLine();
+        String[] coordinatesArray = coordinates.split(" ");
+        System.out.println(Arrays.toString(coordinatesArray));
+        while (true) {
+            if (checkCoordinates(coordinatesArray)) {
+                makeThemove(coordinatesArray);
             }
-            System.out.print("|\n");
         }
-        System.out.println("---------");
-        checkGame(gameBoard);
+
+        // checkGame(gameBoard);
     }
 }
