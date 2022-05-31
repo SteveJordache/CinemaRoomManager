@@ -8,41 +8,58 @@ public class Main {
     public static boolean isPossible;
     public static int counter = 0;
     public static int[] finalArray = new int[2];
+    public static char previous = 'X';
+    public static String finalMessage ="" ;
 
-    public static void checkGame(char[][] gameBoard) {
+    public static boolean checkGame(char[][] gameBoard) {
         char winningParty = 0;
         isPossible = totalX - totalO >= -1 && totalX - totalO <= 1;
         for (int i = 0; i < gameBoard.length; i++) {
             if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][0] == gameBoard[i][2]) {
-                winningParty = gameBoard[i][0];
-                counter++;
+                if (gameBoard[i][0] != ' ') {
+                    winningParty = gameBoard[i][0];
+                    counter++;
+                }
+
             }
         }
         for (int j = 0; j < gameBoard.length; j++) {
             if (gameBoard[0][j] == gameBoard[1][j] && gameBoard[0][j] == gameBoard[2][j]) {
-                winningParty = gameBoard[0][j];
-                counter++;
+                if (gameBoard[0][j] != ' ') {
+                    winningParty = gameBoard[0][j];
+                    counter++;
+                }
             }
         }
         if (gameBoard[0][0] == gameBoard[1][1] && gameBoard[0][0] == gameBoard[2][2]) {
-            winningParty = gameBoard[0][0];
-            counter++;
+            if (gameBoard[0][0] != ' ') {
+                winningParty = gameBoard[0][0];
+                counter++;
+            }
         }
         if (gameBoard[0][2] == gameBoard[1][1] && gameBoard[0][2] == gameBoard[2][0]) {
-            winningParty = gameBoard[0][2];
-            counter++;
-        }
-        if (isPossible && counter == 0 && totalX + totalO < 9) {
-            System.out.println("Game not finished");
-        } else if (isPossible && totalO + totalX == 9 && counter == 0) {
-            System.out.println("Draw");
-        } else if (isPossible && counter == 1 ) {
-            System.out.printf("%s wins", winningParty);
-        }
-        else if (!isPossible || counter > 1) {
-            System.out.println("Impossible");
+            if (gameBoard[2][0] != ' ') {
+                winningParty = gameBoard[2][0];
+                counter++;
+            }
 
         }
+        if (isPossible && counter == 0 && totalX + totalO < 9) {
+            finalMessage = "Game not finished";
+            return true;
+        } else if (isPossible && totalO + totalX == 9 && counter == 0) {
+            finalMessage ="Draw";
+            return false;
+        } else if (isPossible && counter == 1 ) {
+            finalMessage = String.format("%c wins", winningParty);
+            return false;
+        }
+        else if (!isPossible || counter > 1) {
+            finalMessage = "Impossible";
+            return  false;
+
+        }
+        return true;
     }
 
     public static void printBoard(){
@@ -94,17 +111,23 @@ public class Main {
                         flag = false;
                 }
             }
-            if (counterJ ==2 && makeTheMove(finalArray)) {
+            if (counterJ ==2 && makeTheMove(finalArray, previous)) {
                 loop = false;
             }
-            }
         }
+    }
 
-    public static boolean makeTheMove(int[] coordinates) {
+    public static boolean makeTheMove(int[] coordinates, char sign) {
         int coordinate2 = coordinates[0] -1;
         int coordinate1 = coordinates[1] -1;
         if (' ' == (gameBoard[coordinate2][coordinate1])) {
-            gameBoard[coordinate2][coordinate1] = 'X';
+            gameBoard[coordinate2][coordinate1] = sign;
+            if (sign  == 'X'){
+                totalX++;
+            } else if (sign =='O') {
+                totalO++;
+            }
+            previous = sign == 'X' ? 'O' : 'X';
             return true;
         } else {
             System.out.println("This cell is occupied! Choose another one!");
@@ -113,9 +136,7 @@ public class Main {
 
     }
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter cells: ");
-        String symbolString = scanner.nextLine();
+        String symbolString = "_________";
         symbolString = symbolString.replace("_", " ");
         char[] symbolChar = symbolString.toCharArray();
         int index = 0;
@@ -131,11 +152,15 @@ public class Main {
                 index++;
             }
         }
-
         printBoard();
-        enterCoordinates();
-        printBoard();
-
-        // checkGame(gameBoard);
+        boolean stillLooping = true;
+        while (stillLooping) {
+            enterCoordinates();
+            printBoard();
+            stillLooping = checkGame(gameBoard);
+            if (!stillLooping) {
+                System.out.println(finalMessage);
+            }
+        }
     }
 }
