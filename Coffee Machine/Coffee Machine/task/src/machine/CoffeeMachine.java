@@ -19,7 +19,7 @@ public class CoffeeMachine {
     }
     public static String insufficientResources (int[] recipe, String coffeeType) {
         int value = 0;
-        String output = "";
+        String output;
         int[] toCompare = new int[0];
         switch (coffeeType) {
             case "ESPRESSO":
