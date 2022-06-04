@@ -11,34 +11,96 @@ public class CoffeeMachine {
     public static final int[] ESPRESSO_RECIPE = {250, 0, 16, 4};
     public static final int [] LATTE_RECIPE = {350, 75, 20, 7 };
     public static final int[] CAPUCCINO_RECIPE = {200, 100, 12, 6};
-    public  static boolean successfulBuy = false;
+    public static String coffeeType= "";
+
+    public static boolean checkResources(int[] recipe) {
+        return waterReserveMl - recipe[0] >= 0 && milkReserveMl - recipe[1] >= 0 && coffeeBeansReserveG - recipe[2] >= 0
+                && nrOfDisposableCups > 1;
+    }
+    public static String insufficientResources (int[] recipe, String coffeeType) {
+        int value = 0;
+        String output = "";
+        int[] toCompare = new int[0];
+        switch (coffeeType) {
+            case "ESPRESSO":
+                toCompare = ESPRESSO_RECIPE;
+                break;
+            case "LATTE":
+                toCompare = LATTE_RECIPE;
+                break;
+            case "CAPUCCINO":
+                toCompare = CAPUCCINO_RECIPE;
+                break;
+        }
+        if (!checkResources(recipe)){
+            for (int i=0; i < 3; i++ ) {
+                if (recipe[i] - toCompare[i] < 0) {
+                    value = i;
+                    break;
+                }
+            }
+            if (value == 0) {
+                output ="water";
+            } else if ( value == 1){
+                output ="milk";
+            } else {
+                output ="coffee";
+            }
+
+            return String.format("Sorry, not enough %s!", output);
+        }
+        return "I have enough resources, making you a coffee!";
+    }
 
     public static void buy() {
-        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu: ");
         String inputBuy = scanner.nextLine();
         switch (inputBuy) {
             case "1":
-                waterReserveMl -= ESPRESSO_RECIPE[0];
-                milkReserveMl -= ESPRESSO_RECIPE[1];
-                coffeeBeansReserveG -= ESPRESSO_RECIPE[2];
-                nrOfDisposableCups--;
-                dollarsAmount += ESPRESSO_RECIPE[3];
+                coffeeType = "ESPRESSO";
+                if (checkResources(ESPRESSO_RECIPE)) {
+                    System.out.println("I have enough resources, making you a coffee!");
+                    waterReserveMl -= ESPRESSO_RECIPE[0];
+                    milkReserveMl -= ESPRESSO_RECIPE[1];
+                    coffeeBeansReserveG -= ESPRESSO_RECIPE[2];
+                    nrOfDisposableCups--;
+                    dollarsAmount += ESPRESSO_RECIPE[3];
+            } else {
+                    System.out.println(insufficientResources(ESPRESSO_RECIPE, "ESPRESSO"));
+                }
+
                 break;
             case "2":
-                waterReserveMl -= LATTE_RECIPE[0];
-                milkReserveMl -= LATTE_RECIPE[1];
-                coffeeBeansReserveG -= LATTE_RECIPE[2];
-                nrOfDisposableCups--;
-                dollarsAmount += LATTE_RECIPE[3];
+                coffeeType = "LATE";
+                if (checkResources(LATTE_RECIPE)) {
+                    System.out.println("I have enough resources, making you a coffee!");
+                    waterReserveMl -= LATTE_RECIPE[0];
+                    milkReserveMl -= LATTE_RECIPE[1];
+                    coffeeBeansReserveG -= LATTE_RECIPE[2];
+                    nrOfDisposableCups--;
+                    dollarsAmount += LATTE_RECIPE[3];
+                }
+                else {
+                    System.out.println(insufficientResources(LATTE_RECIPE, "LATTE"));
+                }
+
                 break;
             case "3":
-                waterReserveMl -= CAPUCCINO_RECIPE[0];
-                milkReserveMl -= CAPUCCINO_RECIPE[1];
-                coffeeBeansReserveG -= CAPUCCINO_RECIPE[2];
-                nrOfDisposableCups--;
-                dollarsAmount += CAPUCCINO_RECIPE[3];
+                coffeeType = "CAPUCCINO";
+                if (checkResources(CAPUCCINO_RECIPE)) {
+                    System.out.println("I have enough resources, making you a coffee!");
+                    waterReserveMl -= CAPUCCINO_RECIPE[0];
+                    milkReserveMl -= CAPUCCINO_RECIPE[1];
+                    coffeeBeansReserveG -= CAPUCCINO_RECIPE[2];
+                    nrOfDisposableCups--;
+                    dollarsAmount += CAPUCCINO_RECIPE[3];
+                } else {
+                    System.out.println(insufficientResources(CAPUCCINO_RECIPE, "CAPUCCINO"));
+                }
+
                 break;
-            default:
+            case "back":
+                break;
         }
 
 
@@ -71,22 +133,27 @@ public class CoffeeMachine {
     }
 
     public static void main(String[] args) {
-        machineStatus();
-        System.out.println("Write action (buy, fill, take):");
-        String input = scanner.nextLine();
-        switch (input) {
-            case "buy":
-                buy();
-                break;
-            case "fill":
-                fill();
-                break;
-            case "take":
-                take();
-                break;
-            default:
-                break;
+        boolean flag = true;
+        while (flag) {
+            System.out.println("Write action (buy, fill, take, remaining, exit):");
+            String input = scanner.nextLine();
+            switch (input) {
+                case "buy":
+                    buy();
+                    break;
+                case "fill":
+                    fill();
+                    break;
+                case "take":
+                    take();
+                    break;
+                case "remaining":
+                    machineStatus();
+                    break;
+                case "exit":
+                    flag = false;
+                    break;
             }
-        machineStatus();
+        }
     }
 }
